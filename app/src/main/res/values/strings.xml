@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">News Catcher</string>
+    <string name="search_hint">Search...</string>
+    <string name="save">Save</string>
+    <string name="unsave">Unsave</string>
+    <string name="share">Share</string>
+    <string name="read_more">Read more...</string>
+    <string name="back">Back</string>
+</resources>
