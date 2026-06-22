@@ -24,7 +24,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.newsapp2.core.network.LocalAppLanguage
+import com.newsapp2.core.network.Language
 import com.newsapp2.core.network.LocalUpdateLanguage
 
 @Composable
@@ -52,13 +52,13 @@ fun DropDownScreen(onBackClick: () -> Unit) {
 
         val changeLanguage = LocalUpdateLanguage.current
 
-        LangList("EN", onClick = {
-            changeLanguage("en")
+        LangList(Language.EN.name, onClick = {
+            changeLanguage(Language.EN.name)
             onBackClick()
         })
 
-        LangList("RU", onClick = {
-            changeLanguage("ru")
+        LangList(Language.RU.name, onClick = {
+            changeLanguage(Language.RU.name)
             onBackClick()
         })
     }

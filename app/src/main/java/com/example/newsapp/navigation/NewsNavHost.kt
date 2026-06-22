@@ -2,6 +2,7 @@ package com.example.newsapp.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -23,11 +24,11 @@ fun NewsNavHost(
     ) {
         composable<HomeRoute> {
             HomeScreen(onNewsClicked = { selectedNews ->
-                navController.navigate(DetailRoute(selectedNews))
+                navController.safeNavigate(DetailRoute(selectedNews))
             }, onLangCLick = {
-                navController.navigate(DropDownRoute)
+                navController.safeNavigate(DropDownRoute)
             }, onBookmarkClicked = {
-                navController.navigate(SavedRoute)
+                navController.safeNavigate(SavedRoute)
             })
         }
 
@@ -41,21 +42,27 @@ fun NewsNavHost(
             DetailScreen(
                 news = newsData,
                 onBackClick = {
-                    navController.popBackStack()
+                    navigateToBackStack(navController)
                 }
             )
         }
 
         composable<DropDownRoute> {
-            DropDownScreen { navController.popBackStack() }
+            DropDownScreen { navigateToBackStack(navController) }
         }
 
         composable<SavedRoute>() {
-            SavedScreen({ navController.popBackStack() }, onCardClicked = { selectedNews ->
-                navController.navigate(
+            SavedScreen({ navigateToBackStack(navController) }, onCardClicked = { selectedNews ->
+                navController.safeNavigate(
                     DetailRoute(selectedNews)
                 )
             })
         }
+    }
+}
+
+fun navigateToBackStack(navController: NavController) {
+    if (navController.previousBackStackEntry != null) {
+        navController.popBackStack()
     }
 }

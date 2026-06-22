@@ -24,6 +24,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil3.compose.AsyncImage
+import com.newsapp2.core.network.Language
 import com.newsapp2.core.network.LocalAppLanguage
 import com.newsapp2.domain.model.News
 
@@ -274,8 +275,7 @@ fun LanguageSwitchButton(
     onLangCLick: () -> Unit
 ) {
     val currentLocale = LocalAppLanguage.current
-    val isEnglish = currentLocale == "en"
-
+    val isEnglish = currentLocale.equals(Language.EN.name, ignoreCase = true)
     Box(
         modifier = modifier
             .background(
@@ -288,7 +288,7 @@ fun LanguageSwitchButton(
 
     ) {
         Text(
-            text = if (isEnglish) "EN" else "RU",
+            text = if (isEnglish) Language.EN.name else Language.RU.name,
             fontSize = 11.sp,
             fontWeight = FontWeight.Bold,
             color = Color.Black,

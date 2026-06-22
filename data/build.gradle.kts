@@ -39,7 +39,7 @@ dependencies {
     implementation(project(":domain"))
     implementation(project(":core:network"))
 
-    val roomVersion = "2.6.1" // 2026-cı il üçün stabil versiya
+    val roomVersion = "2.6.1"
 
     implementation("androidx.room:room-runtime:$roomVersion")
     implementation("androidx.room:room-ktx:$roomVersion")

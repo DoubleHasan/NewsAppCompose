@@ -36,7 +36,6 @@ android {
 
 dependencies {
     implementation(project(":core:network"))
-    implementation(project(":core:ui"))
     implementation(project(":domain"))
 
     implementation("io.coil-kt.coil3:coil-compose:3.0.0")
