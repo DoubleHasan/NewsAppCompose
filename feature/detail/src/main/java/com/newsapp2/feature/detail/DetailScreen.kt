@@ -52,6 +52,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import coil3.compose.AsyncImage
 import com.newsapp2.domain.model.News
 import org.jetbrains.annotations.Async
+import androidx.core.net.toUri
 
 @Composable
 fun DetailScreen(news: News, onBackClick: () -> Unit) {
@@ -158,8 +159,8 @@ fun DetailScreen(news: News, onBackClick: () -> Unit) {
                                     )
                                     Spacer(modifier = Modifier.width(12.dp))
                                     Text(
-                                        text = if (isSaved) stringResource(com.example.newsapp2.core.network.R.string.unsave) else stringResource(
-                                            com.example.newsapp2.core.network.R.string.save
+                                        text = if (isSaved) stringResource(com.newsapp2.core.R.string.unsave) else stringResource(
+                                            com.newsapp2.core.R.string.save
                                         )
                                     )
                                 }
@@ -189,7 +190,7 @@ fun DetailScreen(news: News, onBackClick: () -> Unit) {
                                         tint = Color.Unspecified
                                     )
                                     Spacer(modifier = Modifier.width(12.dp))
-                                    Text(text = stringResource(com.example.newsapp2.core.network.R.string.share))
+                                    Text(text = stringResource(com.newsapp2.core.R.string.share))
                                 }
                             },
                             onClick = {
@@ -287,7 +288,7 @@ fun DetailScreen(news: News, onBackClick: () -> Unit) {
             Spacer(modifier = Modifier.height(49.dp))
 
             Text(
-                text = stringResource(com.example.newsapp2.core.network.R.string.read_more),
+                text = stringResource(com.newsapp2.core.R.string.read_more),
                 fontSize = 13.sp,
                 fontWeight = FontWeight.Bold,
                 color = Color(0xFF57A5D1),
@@ -296,7 +297,7 @@ fun DetailScreen(news: News, onBackClick: () -> Unit) {
                     .padding(end = 33.dp, bottom = 24.dp)
                     .clickable(onClick = {
                         if (news.url.isNotEmpty()) {
-                            val intent = Intent(Intent.ACTION_VIEW, Uri.parse(news.url))
+                            val intent = Intent(Intent.ACTION_VIEW, news.url.toUri())
                             context.startActivity(intent)
                         }
                     })

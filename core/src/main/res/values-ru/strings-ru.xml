@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Ловец Новостей</string>
+    <string name="search_hint">Поиск...</string>
+    <string name="save">Сохранить</string>
+    <string name="unsave">Удалить</string>
+    <string name="share">Поделиться</string>
+    <string name="read_more">Читать далее...</string>
+    <string name="back">Назад</string>
+</resources>

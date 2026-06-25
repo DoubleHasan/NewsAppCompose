@@ -29,20 +29,31 @@ android {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
+
     kotlinOptions {
         jvmTarget = "11"
     }
 }
 
-dependencies {
-    implementation(project(":core:network"))
-    implementation(project(":domain"))
+configurations.all {
+    resolutionStrategy {
+        eachDependency {
+            if (requested.group == "org.jetbrains.kotlin") {
+                useVersion("2.1.0")
+            }
+        }
+    }
+}
 
+dependencies {
+    implementation(project(":domain"))
+    implementation(project(":core"))
     implementation("io.coil-kt.coil3:coil-compose:3.0.0")
     implementation("io.coil-kt.coil3:coil-network-ktor3:3.0.0")
 
     implementation(libs.hilt.android)
     implementation(libs.androidx.appcompat)
+    implementation(libs.places)
     ksp(libs.hilt.compiler)
 
     implementation("androidx.hilt:hilt-navigation-compose:1.2.0")

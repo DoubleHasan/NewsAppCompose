@@ -17,9 +17,9 @@ import androidx.core.os.LocaleListCompat
 import androidx.navigation.compose.rememberNavController
 import com.example.newsapp.navigation.NewsNavHost
 import com.example.newsapp.ui.theme.NewsAppTheme
+import com.newsapp2.core.LocalAppLanguage
+import com.newsapp2.core.LocalUpdateLanguage
 import dagger.hilt.android.AndroidEntryPoint
-import com.newsapp2.core.network.LocalAppLanguage
-import com.newsapp2.core.network.LocalUpdateLanguage
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {

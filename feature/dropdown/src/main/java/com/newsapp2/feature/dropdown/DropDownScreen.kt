@@ -24,8 +24,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.newsapp2.core.network.Language
-import com.newsapp2.core.network.LocalUpdateLanguage
+import com.newsapp2.core.Language
+import com.newsapp2.core.LocalUpdateLanguage
 
 @Composable
 fun DropDownScreen(onBackClick: () -> Unit) {

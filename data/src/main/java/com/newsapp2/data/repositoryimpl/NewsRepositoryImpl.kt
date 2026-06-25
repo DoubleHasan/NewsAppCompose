@@ -1,5 +1,6 @@
 package com.newsapp2.data.repositoryimpl
 
+import android.util.Log
 import com.newsapp2.data.dto.NewsDto
 import com.newsapp2.data.mapper.toNewsList
 import com.newsapp2.domain.model.News
@@ -10,18 +11,13 @@ import io.ktor.client.request.get
 import javax.inject.Inject
 
 class NewsRepositoryImpl @Inject constructor(private val client: HttpClient) : NewsRepository {
-    override suspend fun getNews(query : String): List<News> {
-
-        val apiKey = "9424855db1824f37ac3dd48103fa829d"
-
-        val data =
-            client.get("https://newsapi.org/v2/everything?q=$query&apiKey=$apiKey")
-                .body<NewsDto>()
+    override suspend fun getNews(query: String): List<News> {
+        val data = client.get("https://newsapi.org/v2/everything") {
+            url {
+                parameters.append("q", query)
+            }
+        }.body<NewsDto>()
 
         return data.toNewsList()
-
     }
-
-
 }
-

@@ -19,24 +19,24 @@ fun NewsNavHost(
 ) {
     NavHost(
         navController = navController,
-        startDestination = HomeRoute,
+        startDestination = NavigationRoutes.HomeRoute,
         modifier = modifier
     ) {
-        composable<HomeRoute> {
+        composable<NavigationRoutes.HomeRoute> {
             HomeScreen(onNewsClicked = { selectedNews ->
-                navController.safeNavigate(DetailRoute(selectedNews))
+                navController.safeNavigate(NavigationRoutes.DetailRoute(selectedNews))
             }, onLangCLick = {
-                navController.safeNavigate(DropDownRoute)
+                navController.safeNavigate(NavigationRoutes.DropDownRoute)
             }, onBookmarkClicked = {
-                navController.safeNavigate(SavedRoute)
+                navController.safeNavigate(NavigationRoutes.SavedRoute)
             })
         }
 
-        composable<DetailRoute>(
+        composable<NavigationRoutes.DetailRoute>(
             typeMap = customArgTypes
         ) { backStackEntry ->
 
-            val detailRoute: DetailRoute = backStackEntry.toRoute()
+            val detailRoute: NavigationRoutes.DetailRoute = backStackEntry.toRoute()
             val newsData = detailRoute.news
 
             DetailScreen(
@@ -47,14 +47,14 @@ fun NewsNavHost(
             )
         }
 
-        composable<DropDownRoute> {
+        composable<NavigationRoutes.DropDownRoute> {
             DropDownScreen { navigateToBackStack(navController) }
         }
 
-        composable<SavedRoute>() {
+        composable<NavigationRoutes.SavedRoute>() {
             SavedScreen({ navigateToBackStack(navController) }, onCardClicked = { selectedNews ->
                 navController.safeNavigate(
-                    DetailRoute(selectedNews)
+                    NavigationRoutes.DetailRoute(selectedNews)
                 )
             })
         }

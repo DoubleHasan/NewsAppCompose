@@ -24,8 +24,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil3.compose.AsyncImage
-import com.newsapp2.core.network.Language
-import com.newsapp2.core.network.LocalAppLanguage
+import com.newsapp2.core.Language
+import com.newsapp2.core.LocalAppLanguage
 import com.newsapp2.domain.model.News
 
 @Composable
@@ -37,9 +37,8 @@ fun HomeScreen(
     viewModel: HomeViewModel = hiltViewModel()
 ) {
     var selectedItem by remember { mutableIntStateOf(0) }
-    var searchText by remember { mutableStateOf("") }
+    val searchText by viewModel.searchText.collectAsState()
     val uiState by viewModel.uiState.collectAsState()
-    val searchState by viewModel.searchUiState.collectAsState()
 
     Scaffold(
         modifier = modifier.fillMaxSize(),
@@ -103,12 +102,7 @@ fun HomeScreen(
 
             when (val currentState = uiState) {
                 is UIState.Loading -> {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(180.dp),
-                        contentAlignment = Alignment.Center
-                    ) {
+                    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                         CircularProgressIndicator(color = Color.Black)
                     }
                 }
@@ -128,79 +122,59 @@ fun HomeScreen(
                             )
                         }
                     }
-                }
 
-                is UIState.Error -> {
-                    Box(
+                    SearchTextField(
+                        searchText = searchText,
+                        onValueChange = {
+                            viewModel.processIntent(HomeIntent.OnQueryChange(it))
+                        }
+                    )
+
+                    Spacer(modifier = Modifier.height(13.dp))
+
+                    LanguageSwitchButton(
                         modifier = Modifier
-                            .fillMaxWidth()
-                            .height(180.dp),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Text(text = currentState.message, color = Color.Red, fontSize = 14.sp)
-                    }
-                }
-            }
+                            .align(Alignment.End)
+                            .padding(end = 23.dp),
+                        onLangCLick = onLangCLick
+                    )
 
-            SearchTextField(
-                searchText = searchText.trim(),
-                onValueChange = {
-                    searchText = it
-                    if (it.trim().isEmpty()) {
-                        viewModel.searchNews("finance")
+                    Spacer(modifier = Modifier.height(23.dp))
+
+                    if (currentState.searchList.isNotEmpty()) {
+                        LazyColumn(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .weight(1f),
+                            contentPadding = PaddingValues(bottom = 16.dp),
+                            verticalArrangement = Arrangement.spacedBy(12.dp)
+                        ) {
+                            items(currentState.searchList) { item ->
+                                SearchNews(
+                                    news = item,
+                                    onCardClicked = { onNewsClicked(item) }
+                                )
+                            }
+                        }
                     } else {
-                        viewModel.searchNews(searchText)
-                    }
-                }
-            )
-
-            Spacer(modifier = Modifier.height(13.dp))
-
-            LanguageSwitchButton(
-                modifier = Modifier
-                    .align(Alignment.End)
-                    .padding(end = 23.dp),
-                onLangCLick = onLangCLick
-            )
-
-            Spacer(modifier = Modifier.height(23.dp))
-
-            when (val currentState = searchState) {
-                is UIState.Loading -> {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .weight(1f),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        CircularProgressIndicator(color = Color.Black)
-                    }
-                }
-
-                is UIState.Success -> {
-                    LazyColumn(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .weight(1f),
-                        contentPadding = PaddingValues(bottom = 16.dp),
-                        verticalArrangement = Arrangement.spacedBy(12.dp)
-                    ) {
-                        items(currentState.newsList) { item ->
-                            SearchNews(
-                                news = item,
-                                onCardClicked = { onNewsClicked(item) }
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .weight(1f),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Text(
+                                text = "There is not news about this",
+                                color = Color.Gray,
+                                fontSize = 14.sp,
+                                fontWeight = FontWeight.Medium
                             )
                         }
                     }
                 }
 
                 is UIState.Error -> {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .weight(1f),
-                        contentAlignment = Alignment.Center
-                    ) {
+                    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                         Text(text = currentState.message, color = Color.Red, fontSize = 14.sp)
                     }
                 }
@@ -211,32 +185,34 @@ fun HomeScreen(
 
 @Composable
 fun TopBar() {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(start = 27.dp, top = 16.dp, bottom = 31.dp),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Image(
-            painter = painterResource(R.drawable.blackpoint),
-            contentDescription = "Point",
-            modifier = Modifier.size(18.dp)
-        )
-        Spacer(modifier = Modifier.width(10.dp))
+    Column(modifier = Modifier.fillMaxWidth()) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(start = 27.dp, top = 16.dp, bottom = 31.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Image(
+                painter = painterResource(R.drawable.blackpoint),
+                contentDescription = "Point",
+                modifier = Modifier.size(18.dp)
+            )
+            Spacer(modifier = Modifier.width(10.dp))
+            Text(
+                text = stringResource(com.newsapp2.core.R.string.app_name),
+                fontWeight = FontWeight.Bold,
+                fontSize = 20.sp
+            )
+        }
+
         Text(
-            text = stringResource(com.example.newsapp2.core.network.R.string.app_name),
-            fontWeight = FontWeight.Bold,
-            fontSize = 20.sp
+            text = "March 26th, 2022",
+            fontSize = 13.sp,
+            fontWeight = FontWeight.Medium,
+            color = Color(0xFF89969C),
+            modifier = Modifier.padding(start = 27.dp, bottom = 16.dp)
         )
     }
-
-    Text(
-        text = "March 26th, 2022",
-        fontSize = 13.sp,
-        fontWeight = FontWeight.Medium,
-        color = Color(0xFF89969C),
-        modifier = Modifier.padding(start = 27.dp, bottom = 16.dp)
-    )
 }
 
 @Composable
@@ -249,7 +225,7 @@ fun SearchTextField(
         onValueChange = onValueChange,
         placeholder = {
             Text(
-                text = stringResource(com.example.newsapp2.core.network.R.string.search_hint),
+                text = stringResource(com.newsapp2.core.R.string.search_hint),
                 fontSize = 11.sp,
                 color = Color(0xFFCDC8C8)
             )
@@ -285,7 +261,6 @@ fun LanguageSwitchButton(
             .width(75.dp)
             .height(26.dp)
             .clickable { onLangCLick() }
-
     ) {
         Text(
             text = if (isEnglish) Language.EN.name else Language.RU.name,
@@ -369,7 +344,11 @@ fun PopularNewsCard(news: News, modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun SearchNews(news: News, modifier: Modifier = Modifier, onCardClicked: (News) -> Unit) {
+fun SearchNews(
+    news: News,
+    modifier: Modifier = Modifier,
+    onCardClicked: (News) -> Unit
+) {
     Card(
         modifier = modifier
             .fillMaxWidth()
